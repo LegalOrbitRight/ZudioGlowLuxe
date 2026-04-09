@@ -1,0 +1,1348 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glow Luxe Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:#fff;color:#333;overflow-x:hidden}
+
+/* FAST MOVING BACKGROUND */
+body::before{
+content:"";
+position:fixed;
+width:300%;height:300%;
+background:url('https://picsum.photos/200?random=1');
+opacity:0.06;
+animation:moveBg 8s linear infinite;
+z-index:-1
+}
+@keyframes moveBg{
+0%{transform:translate(0,0)}
+100%{transform:translate(-400px,-400px)}
+}
+
+header{background:#fff;padding:15px 60px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee}
+header h2{color:#ff6a00}
+nav a{margin:0 10px;text-decoration:none;color:#333;font-weight:600}
+nav a:hover{color:#ff6a00}
+
+/* SLIDER */
+.slider{overflow:hidden;white-space:nowrap;background:#fff;padding:10px 0;border-bottom:1px solid #eee}
+.slider-track{display:inline-block;animation:slide 20s linear infinite}
+.slider img{width:150px;margin:0 15px;border-radius:10px}
+@keyframes slide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+.hero{text-align:center;padding:100px}
+.hero h1{color:#ff6a00}
+
+.section{padding:70px 80px;text-align:center}
+h2{color:#ff6a00;margin-bottom:30px;font-size:30px}
+
+.products,.offers,.services,.testimonials{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:30px}
+
+.card,.offer-card,.service-card,.test-card{
+background:#fff;border:1px solid #eee;border-radius:12px;padding:18px;transition:.3s
+}
+.card:hover,.offer-card:hover{box-shadow:0 6px 15px rgba(0,0,0,0.12)}
+
+.card img,.offer-card img{width:100%;height:180px;border-radius:10px}
+
+button{background:#ff6a00;color:#fff;padding:10px;border:none;border-radius:6px;margin-top:8px;cursor:pointer}
+
+.cart{background:#fff;border:1px solid #eee;padding:35px;margin:40px;border-radius:12px}
+
+/* CONTACT PROFESSIONAL */
+.contact-wrapper{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:50px;
+max-width:1100px;
+margin:50px auto 20px;
+}
+
+.contact-info{
+background:linear-gradient(135deg,#ff6a00,#ff8c42);
+color:#fff;
+padding:50px;
+border-radius:20px;
+text-align:left;
+line-height:1.8;
+}
+
+.contact-box{
+background:#fff;
+padding:50px;
+border-radius:20px;
+border:1px solid #eee;
+box-shadow:0 10px 25px rgba(0,0,0,0.08)
+}
+
+.contact-box input,.contact-box textarea{
+width:100%;padding:14px;margin:10px 0;border:1px solid #ddd;border-radius:8px
+}
+
+.contact-box button{
+width:100%;font-weight:600;
+background:linear-gradient(45deg,#ff6a00,#ff8c42)
+}
+
+/* GIFT SECTION */
+.gift-section{
+background:linear-gradient(120deg,#fff3e6,#ffe0cc);
+padding:40px;
+border-radius:15px;
+max-width:1000px;
+margin:30px auto;
+box-shadow:0 5px 20px rgba(0,0,0,0.1)
+}
+.gift-box{
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:20px
+}
+.gift-box div{
+flex:1;
+min-width:200px;
+background:#fff;
+padding:20px;
+border-radius:10px;
+border:1px solid #eee
+}
+
+/* FAQ */
+.faq-item{border:1px solid #ddd;margin:10px 0;border-radius:8px}
+.faq-q{background:#ff6a00;color:#fff;padding:12px;cursor:pointer}
+.faq-a{display:none;padding:12px}
+
+footer{background:#222;color:#fff;text-align:center;padding:20px;margin-top:40px}
+
+/* SLIDER IMAGE FIX */
+.slider img{
+ width:150px;
+ height:150px;
+ object-fit:cover;
+ margin:0 15px;
+ border-radius:10px;
+}
+
+/* OFFER SECTION GRID */
+#offerProducts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  padding: 20px;
+}
+
+/* OFFER CARD DESIGN */
+#offerProducts .product {
+  background: #fff;
+  border-radius: 15px;
+  padding: 15px;
+  text-align: center;
+  border: 1px solid #eee;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+#offerProducts .product:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* OFFER IMAGE FIX */
+#offerProducts img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;   /* FULL image visible */
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+/* TEXT SPACING */
+#offerProducts h3 {
+  margin: 10px 0 5px;
+  font-size: 15px;
+}
+
+#offerProducts p {
+  margin-bottom: 8px;
+}
+
+/* PRICE STYLE */
+#offerProducts p span:first-child {
+  color: #ff6a00;
+  font-weight: bold;
+}
+
+#offerProducts p span:last-child {
+  color: gray;
+  text-decoration: line-through;
+}
+
+/* BUTTON */
+#offerProducts button {
+  background: linear-gradient(45deg,#ff6a00,#ff8c42);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+/* TOAST NOTIFICATION */
+#toast{
+ position:fixed;
+ bottom:20px;
+ right:20px;
+ background:#ff6a00;
+ color:#fff;
+ padding:12px 20px;
+ border-radius:8px;
+ display:none;
+ font-size:14px;
+ box-shadow:0 5px 15px rgba(0,0,0,0.2);
+ animation:fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn{
+ from{opacity:0; transform:translateY(20px);}
+ to{opacity:1; transform:translateY(0);}
+}
+
+/* CART DESIGN UPGRADE */
+.cart {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 15px;
+  background: linear-gradient(135deg,#fff,#fff3e6);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.cart h2 {
+  margin-bottom: 20px;
+  color: #ff6a00;
+}
+
+#cart li {
+  list-style: none;
+  background: #fff;
+  margin: 10px 0;
+  padding: 12px 15px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+#total {
+  color: #ff6a00;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.cart button {
+  width: 100%;
+  margin-top: 15px;
+  background: linear-gradient(45deg,#ff6a00,#ff8c42);
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+/* FAQ CONTAINER CENTER */
+#faqContainer{
+ max-width: 800px;
+ margin: auto;
+}
+
+/* EACH FAQ BOX */
+.faq-item{
+ border: 1px solid #eee;
+ margin: 15px 0;
+ border-radius: 10px;
+ overflow: hidden;
+ box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* QUESTION */
+.faq-q{
+ background: linear-gradient(45deg,#ff6a00,#ff8c42);
+ color: #fff;
+ padding: 15px;
+ cursor: pointer;
+ font-weight: 600;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+}
+
+/* ANSWER */
+.faq-a{
+ display: none;
+ padding: 15px;
+ background: #fff;
+ line-height: 1.6;
+}
+
+/* HOVER EFFECT */
+.faq-q:hover{
+ opacity: 0.9;
+}
+
+/* FAQ CONTAINER */
+#faqContainer{
+ max-width: 900px;
+ margin: auto;
+ display: flex;
+ flex-direction: column;
+ gap: 20px;
+}
+
+/* EACH ITEM */
+.faq-item{
+ width: 70%;
+ border-radius: 12px;
+ overflow: hidden;
+ box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+
+.faq-item{
+ margin: 10px;
+}
+
+#offerProducts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 20px;
+}
+
+#offerProducts .product img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* CART LIST FIX */
+#cart li{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+}
+
+/* REMOVE BUTTON FIX */
+#cart li button{
+ width:auto;              /* IMPORTANT */
+ padding:4px 10px;
+ background:red;
+ color:#fff;
+ border:none;
+ border-radius:5px;
+ cursor:pointer;
+ font-size:12px;
+ white-space:nowrap;      /* text break nahi hoga */
+}
+
+/* HOVER EFFECT */
+#cart li button:hover{
+ background:#cc0000;
+}
+
+#cart li button{
+ background:none;
+ color:red;
+ font-size:16px;
+}
+
+.faq-a{
+ display:none;
+ padding:10px;
+ background:#fff;
+ color:#333;
+ border-radius:8px;
+ margin-top:5px;
+}
+
+.faq-item.active .faq-a{
+ display:block;
+}
+
+.size-box{
+ display:flex;
+ justify-content:center;
+ gap:6px;
+ margin:8px 0;
+}
+
+.size-box button{
+ padding:5px 8px;
+ border:1px solid #ccc;
+ background:#fff;
+ cursor:pointer;
+ border-radius:4px;
+ font-size:12px;
+}
+
+.size-box button.active{
+ background:#ff6a00;
+ color:#fff;
+ border:none;
+}
+
+.size-wrapper{
+ text-align:left;
+ margin:8px 0;
+}
+
+.size-label{
+ font-size:13px;
+ color:#555;
+ margin-bottom:5px;
+}
+
+.sizes{
+ display:flex;
+ gap:6px;
+}
+
+.sizes span{
+ border:1px solid #ccc;
+ padding:5px 9px;
+ font-size:12px;
+ border-radius:4px;
+ cursor:pointer;
+ transition:0.2s;
+}
+
+.sizes span:hover{
+ border-color:#ff6a00;
+ color:#ff6a00;
+}
+
+.sizes span.active{
+ background:#ff6a00;
+ color:#fff;
+ border-color:#ff6a00;
+}
+
+.size-wrapper{
+ text-align:left;
+ margin:8px 0;
+}
+
+.size-label{
+ font-size:13px;
+ color:#555;
+ margin-bottom:5px;
+}
+
+.sizes{
+ display:flex;
+ gap:6px;
+}
+
+.sizes span{
+ border:1px solid #ccc;
+ padding:5px 9px;
+ font-size:12px;
+ border-radius:4px;
+ cursor:pointer;
+ transition:0.2s;
+}
+
+.sizes span:hover{
+ border-color:#ff6a00;
+ color:#ff6a00;
+}
+
+.sizes span.active{
+ background:#ff6a00;
+ color:#fff;
+ border-color:#ff6a00;
+}
+
+.payment-box{
+ max-width:400px;
+ margin:30px auto;
+ padding:20px;
+ border:1px solid #eee;
+ border-radius:10px;
+ box-shadow:0 5px 15px rgba(0,0,0,0.1);
+ background:#fff;
+}
+
+.payment-option{
+ margin:10px 0;
+ font-size:14px;
+}
+
+.card-form input{
+ width:100%;
+ padding:10px;
+ margin:8px 0;
+ border:1px solid #ccc;
+ border-radius:6px;
+}
+
+.card-row{
+ display:flex;
+ gap:10px;
+}
+
+.card-row input{
+ flex:1;
+}
+
+.bill-box{
+ max-width:500px;
+ margin:30px auto;
+ padding:20px;
+ border:1px solid #eee;
+ border-radius:10px;
+ background:#fff;
+ box-shadow:0 5px 15px rgba(0,0,0,0.1);
+ text-align:left;
+}
+
+.bill-box h3{
+ text-align:center;
+ color:#ff6a00;
+ margin-bottom:15px;
+}
+
+.bill-item{
+ display:flex;
+ justify-content:space-between;
+ margin:5px 0;
+}
+
+.bill-total{
+ font-weight:bold;
+ border-top:1px solid #ccc;
+ margin-top:10px;
+ padding-top:10px;
+}
+
+.bill-box{
+ display:none;
+}
+
+ 
+ #billBox {
+   position: absolute;
+   left: 0;
+   top: 0;
+   width: 100%;
+ }
+
+ .bill-box{
+ animation:highlight 0.8s ease;
+}
+
+@keyframes highlight{
+ 0%{background:#fff3e6;}
+ 100%{background:#fff;}
+}
+
+#invoiceContent{
+ background:#fff;
+ border-radius:12px;
+ box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+#invoiceContent table tr td{
+ padding:8px;
+ border-bottom:1px solid #eee;
+}
+
+#invoiceContent button{
+ background:#ff6a00;
+ color:#fff;
+ border:none;
+ padding:8px 15px;
+ margin:5px;
+ border-radius:6px;
+ cursor:pointer;
+}
+
+#invoiceContent button:hover{
+ opacity:0.9;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+<h2> Zudio Glow Luxe</h2>
+<nav>
+<a href="#">Home</a>
+<a href="#products">Products</a>
+<a href="#offers">Offers</a>
+<a href="#services">Services</a>
+<a href="#faq">FAQ</a>
+<a href="#contact">Contact</a>
+<span>🛒 Cart (<span id="cartCount">0</span>)</span>
+</nav>
+</header>
+
+<div class="slider"><div class="slider-track" id="topSlider"></div></div>
+
+<section class="hero">
+<h1>Premium Accessories Store</h1>
+<p>Luxury Collection</p>
+</section>
+
+<section id="products" class="section">
+<h2>Products</h2>
+<div class="products" id="productContainer"></div>
+</section>
+
+<section id="offers" class="section">
+  <div style="text-align:center;margin-bottom:20px;">
+  <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchProducts()" 
+  style="width:300px;padding:10px;border-radius:20px;border:1px solid #ccc;">
+</div>
+<!-- Existing Products Section ke niche -->
+<h2>🔥 Special Offers</h2>
+<div id="offerProducts" class="product-container"></div>
+</section>
+
+<section class="cart">
+<h2>Cart</h2>
+<ul id="cart"></ul>
+<h3>Total ₹<span id="total">0</span></h3>
+<div class="payment-box">
+  <div id="billBox" class="bill-box" style="display:none;"></div>
+ 
+
+  <h3>Payment Method</h3>
+
+  <div class="payment-option">
+    <input type="radio" name="pay" checked>
+    💳 Credit / Debit Card
+  </div>
+
+
+  
+
+  <!-- CARD FORM -->
+  <div class="card-form">
+    <input type="text" placeholder="Card Number">
+    <input type="text" placeholder="Card Holder Name">
+
+    <div class="card-row">
+      <input type="text" placeholder="MM/YY">
+      <input type="text" placeholder="CVV">
+    </div>
+  </div>
+
+  <button onclick="fakePayment()">Pay Now</button>
+
+</div>
+</section>
+
+
+
+<section id="faq" class="section">
+<h2>FAQ</h2>
+<div id="faqContainer"></div>
+</section>
+
+<div class="slider"><div class="slider-track" id="bottomSlider"></div></div>
+<div id="toast"></div>
+
+
+
+
+<script>
+
+
+
+let products=[
+  {name:"Clover Chain Set", price:187, img:"images/187chain.jpeg"},
+ {name:"Minimal Gold Chain", price:99, img:"images/99chain.jpeg"},
+ {name:"Black Clover Chain", price:99, img:"images/99chain1.jpeg"},
+ {name:"Silver Knot Ring", price:99, img:"images/99ring.jpeg"},
+ {name:"Rose Gold Infinity Ring", price:99, img:"images/99ring1.jpeg"},
+ {name:"Infinity Gold Ring", price:99, img:"images/99ring4.jpeg"},
+ {name:"Elegant Finger Ring", price:99, img:"images/99ring5.jpeg"},
+ {name:"Double Wave Ring", price:99, img:"images/99ring6.jpeg"},
+ {name:"Triangle Diamond Ring", price:107, img:"images/107ring3.jpeg"},
+ {name:"Stylish Ring", price:109, img:"images/109ring.jpeg"},
+ {name:"Shell Pearl Necklace", price:110, img:"images/110chain.jpeg"},
+ {name:"Luxury Chain Pendant", price:129, img:"images/139chain.jpeg"},
+ {name:"Premium Necklace Set", price:189, img:"images/189cchain.jpeg"},
+ {name:"Cute Hand Ring", price:99, img:"images/99ring2.jpeg"},
+ {name:"Designer Ring", price:109, img:"images/109ring..jpeg"},
+ {name:"Multi Pendant Set", price:169, img:"images/189chain.jpeg"},
+ {name:"Butterfly Black",price:99,img:"images/88u.jpeg"},
+ {name:"Bow Pendant",price:99,img:"images/99.jpeg"},
+ {name:"Star Diamond",price:99,img:"images/99a.jpeg"},
+ {name:"Minimal Star",price:99,img:"images/99b.jpeg"},
+ {name:"Classic Star",price:99,img:"images/99c.jpeg"},
+ {name:"Heart Necklace",price:99,img:"images/99d.jpeg"},
+ {name:"Flower Pendant",price:99,img:"images/99e.jpeg"},
+ {name:"Star Crystal",price:99,img:"images/99g.jpeg"},
+ {name:"Leaf Diamond",price:99,img:"images/99i.jpeg"},
+ {name:"Round Diamond",price:99,img:"images/99j.jpeg"},
+ {name:"Cute Charm",price:99,img:"images/99q.jpeg"},
+ {name:"Shell Pendant",price:107,img:"images/109.jpeg"},
+ {name:"Floral Charm",price:107,img:"images/109a.jpeg"},
+ {name:"Black Pendant",price:109,img:"images/109b.jpeg"},
+ {name:"Layered Star",price:109,img:"images/109f.jpeg"},
+ {name:"Premium Combo",price:109,img:"images/109g.jpeg"},
+ {name:"Green Charm",price:109,img:"images/109h.jpeg"},
+  {name:"Charm Necklace Set", price:159,img:"images/chain159.jpeg"},
+ {name:"Luxury Set",price:109,img:"images/109o.jpeg"},
+ {name:"Elegant Pendant",price:109,img:"images/129a.jpeg"},
+ {name:"Gold Ring",price:169,img:"images/129ring.jpeg"},
+ /* NEW PRODUCTS ADDED */
+ {name:"Gold Ring Set",price:199,img:"images/139ring.jpeg"},
+ {name:"Silver Bracelet",price:199,img:"images/139bangle.jpeg"},
+ {name:"Stylish Ring",price:169,img:"images/139ring..jpeg"},
+ {name:"Premium Bangle",price:179,img:"images/149bangle.jpeg"},
+ {name:"Classic Ring",price:169,img:"images/149ring.jpeg"},
+ {name:"Simple Ring",price:169,img:"images/149rin.jpeg"},
+ {name:"Jewelry Set",price:159,img:"images/159.jpeg"},
+ {name:"Gold Chain",price:169,img:"images/159a.jpeg"},
+ {name:"Pendant Combo",price:169,img:"images/159b.jpeg"},
+ {name:"Luxury Necklace",price:169,img:"images/159h.jpeg"},
+ {name:"Diamond Ring",price:199,img:"images/159r.jpeg"},
+ {name:"Designer Ring",price:199,img:"images/159ring..jpeg"},
+ {name:"Modern Ring",price:199,img:"images/159ring...jpeg"},
+ {name:"Heavy Bangle",price:199,img:"images/188bangle.jpeg"},
+ {name:"Classic Bangle",price:199,img:"images/198bangle.jpeg"},
+ {name:"Premium Bangle Set",price:199,img:"images/199bangle.jpeg"},
+ {name:"Stylish Bangle",price:189,img:"images/199bangle...jpeg"},
+ {name:"Gold Chain Set",price:199,img:"images/199chain.jpeg"},
+ {name:"Trendy Ring",price:199,img:"images/199ring..jpeg"},
+ {name:"Gold Ring Combo", price:199,img:"images/199ring.jpeg"},
+ {name:"Oxidised Jewelry Set", price:499,img:"images/499set.jpeg"},
+
+
+];
+
+// 🔥 OFFER PRODUCTS START
+
+let offerProducts = [
+ {name:"Black T-shirt Daisy", price:214, oldPrice:599, img:"images/214tshirt.jpeg", type:"tshirt"},
+ {name:"Brown Smile T-shirt", price:329, oldPrice:786, img:"images/329tshirt.jpeg", type:"tshirt"},
+ {name:"Pink Midi Dress", price:699, oldPrice:1199, img:"images/699dress.jpeg", type:"tshirt"},
+ {name:"Black Bodycon Dress", price:799, oldPrice:1299, img:"images/799dress.jpeg", type:"tshirt"},
+ { name:"Red Butterfly White Tee", price:194, oldPrice:699, img:"images/194w.jpeg", type:"tshirt" },
+{ name:"Love Butterfly Print Tee", price:194, oldPrice:699, img:"images/194g.jpeg" , type:"tshirt"},
+{ name:"Floral Alphabet S Tee", price:194, oldPrice:699, img:"images/194t.jpeg", type:"tshirt" },
+{ name:"Gorgeous Blue Oversize Tee", price:249, oldPrice:599, img:"images/249t.jpeg", type:"tshirt" },
+{ name:"Dual Tone Butterfly Tee", price:199, oldPrice:899, img:"images/199x.jpeg" , type:"tshirt"},
+{ name:"Infinite Icon Blue Tee", price:199, oldPrice:899, img:"images/199y.jpeg" , type:"tshirt"},
+{ name:"Be Real Brown Oversize Tee", price:199, oldPrice:599, img:"images/199a.jpeg", type:"tshirt" },
+ {name:"Purple Oversize T-shirt", price:199, oldPrice:999, img:"images/199ba.jpeg", type:"tshirt"},
+ {name:"Normal is Boring Tee", price:199, oldPrice:799, img:"images/199e.jpeg", type:"tshirt"},
+ {name:"Butterfly T-shirt", price:199, oldPrice:999, img:"images/199g.jpeg", type:"tshirt"},
+ {name:"Clover Necklace", price:199, oldPrice:699, img:"images/199h.jpeg", type:"tshirt"},
+ {name:"Krishna Print Tee", price:199, oldPrice:799, img:"images/199i.jpeg", type:"tshirt"},
+ {name:"Overthinking Tee", price:199, oldPrice:799, img:"images/199ii.jpeg", type:"tshirt"},
+ {name:"Be Kind T-shirt", price:199, oldPrice:799, img:"images/199j.jpeg", type:"tshirt"},
+ {name:"New York Tee", price:199, oldPrice:799, img:"images/199k.jpeg", type:"tshirt"},
+ {name:"You Are Enough Tee", price:199, oldPrice:799, img:"images/199m.jpeg", type:"tshirt"},
+ {name:"Flower Print Tee", price:199, oldPrice:799, img:"images/199j.jpeg", type:"tshirt"},
+ {name:"Coffee Print Tee", price:199, oldPrice:799, img:"images/199k.jpeg", type:"tshirt"},
+ {name:"Stay Groovy Tee", price:199, oldPrice:799, img:"images/199n.jpeg", type:"tshirt"},
+ {name:"Beautiful Black Crop Tee", price:199, oldPrice:899, img:"images/199o.jpeg", type:"tshirt"},
+ {name:"Beautiful White Tee", price:199, oldPrice:899, img:"images/199s.jpeg", type:"tshirt"},
+ {name:"Alphabet A Designer Tee", price:199, oldPrice:899, img:"images/199ss.jpeg", type:"tshirt"},
+ {name:"Love Hand Printed Tee", price:199, oldPrice:899, img:"images/199t.jpeg", type:"tshirt"},
+ {name:"Headphone Graphic Tee", price:199, oldPrice:899, img:"images/199tisert.jpeg", type:"tshirt"},
+ {name:"Los Angeles Casual Tee", price:199, oldPrice:899, img:"images/199tt.jpeg", type:"tshirt"},
+ {name:"Black Graphic Girl Tee", price:199, oldPrice:899, img:"images/199tttt.jpeg", type:"tshirt"},
+ {name:"Stylish Casual Combo Tee", price:199, oldPrice:899, img:"images/199v.jpeg", type:"tshirt"},
+ {name:"Stylish Zudio Special Dress", price:2599, oldPrice:899, img:"images/trend3000.jpeg", type:"tshirt"},
+
+
+  // 🔥 NEW BAGS ADD HERE
+ {name:"Black Croc Bag", price:219, oldPrice:999, img:"images/199bb.jpeg"},
+ {name:"White Classic Bag", price:219, oldPrice:1099, img:"images/199bbb.jpeg"},
+ {name:"Mini White Croc Bag", price:219, oldPrice:1199, img:"images/199b.jpeg"},
+ {name:"Black Shoulder Bag", price:199, oldPrice:1299, img:"images/120a.jpeg"},
+ {name:"Luxury White Handle Bag", price:199, oldPrice:1399, img:"images/120bag.jpeg"},
+ {name:"Brown Stylish Bag", price:219, oldPrice:1499, img:"images/123b.jpeg"},
+ {name:"Premium Black Gather Bag", price:219, oldPrice:1599, img:"images/120b.jpeg"}
+];
+
+let offerContainer = document.getElementById("offerProducts");
+offerProducts.forEach((product,index)=>{
+  offerContainer.innerHTML += `
+    <div class="product">
+      <img src="${product.img}" />
+      <h3>${product.name}</h3>
+
+      <p>
+        <span style="color:red;">₹${product.price}</span>
+        <span style="text-decoration:line-through;">₹${product.oldPrice}</span>
+      </p>
+
+      ${product.type === "tshirt" ? `
+      <div class="size-wrapper">
+        <p class="size-label">Select Size</p>
+        <div class="sizes">
+          <span onclick="selectSize(this)">S</span>
+          <span onclick="selectSize(this)">M</span>
+          <span onclick="selectSize(this)">L</span>
+          <span onclick="selectSize(this)">XL</span>
+          <span onclick="selectSize(this)">XXL</span>
+        </div>
+      </div>
+      ` : ""}
+
+      <button onclick="buyNow('${product.name}', ${product.price}, this)">
+      Buy Now
+      </button>
+    </div>
+  `;
+});
+
+function selectSize(el){
+ let sizes = el.parentElement.querySelectorAll("span");
+ sizes.forEach(s => s.classList.remove("active"));
+ el.classList.add("active");
+}
+
+
+// ✅ BUY NOW FUNCTION (IMPORTANT)
+function buyNow(name, price, btn){
+
+ let parent = btn.parentElement;
+ let selected = parent.querySelector(".sizes .active");
+
+ if(parent.querySelector(".sizes") && !selected){
+   alert("Please select size first ❗");
+   return;
+ }
+
+ let size = selected ? selected.innerText : "";
+
+ cart.push({name, price, size});
+ renderCart();
+
+ alert(name + (size ? " ("+size+")" : "") + " added to cart");
+}
+
+// 🔥 OFFER PRODUCTS END
+
+let offers=[];
+for(let i=1;i<=25;i++){
+ offers.push({img:"https://picsum.photos/200?offer="+i,price:Math.floor(Math.random()*1000)+100});
+}
+
+let cart=[];
+
+function placeOrder(){
+
+ if(cart.length === 0){
+  alert("Cart is empty ❌");
+  return;
+ }
+
+ let orderText = "";
+ let total = 0;
+
+ cart.forEach(item=>{
+  orderText += item.name 
+  + (item.size ? " (" + item.size + ")" : "") 
+  + " - ₹" + item.price + "\n";
+
+  total += item.price;
+ });
+
+
+ emailjs.send("service_hyygfg8","template_0zpzkqq",{
+   message: orderText,
+  total: total
+ }).then(function(){
+  alert("Order placed ✅ Email sent!");
+ });
+
+}
+
+function renderProducts(){
+ let c=document.getElementById('productContainer');
+ products.forEach((p,i)=>{
+  c.innerHTML+=`<div class="card"><img src="${p.img}"><h3>${p.name}</h3><p>₹${p.price}</p><button onclick="addToCart(${i})">Add</button></div>`;
+ });
+}
+
+function renderOffers(){
+ let o=document.getElementById('offerContainer');
+ offers.forEach((of,i)=>{
+  o.innerHTML+=`<div class="offer-card"><img src="${of.img}"><p>₹${of.price}</p><button onclick="addToCart(${i})">Add</button><button>🎁 Gift</button></div>`;
+ });
+}
+
+function addToCart(i){
+  let item = products[i] || offers[i];
+
+  cart.push(item);
+  renderCart();
+
+  let toast = document.getElementById("toast");
+  toast.innerText = item.name + " added to cart";
+  toast.style.display = "block";
+
+  setTimeout(()=>{
+    toast.style.display = "none";
+  },2000);
+}
+
+
+function renderCart(){
+ let list = document.getElementById('cart');
+ let total = 0;
+
+ list.innerHTML = "";
+
+ cart.forEach((item,index)=>{
+  total += item.price;
+
+  list.innerHTML += `
+    <li>
+      ${item.name} ${item.size ? "(" + item.size + ")" : ""} - ₹${item.price}
+      <button onclick="removeItem(${index})">❌</button>
+    </li>
+  `;
+ });
+
+ document.getElementById('total').innerText = total;
+
+ // ✅ cart count update
+ document.getElementById('cartCount').innerText = cart.length;
+}
+
+function removeItem(index){
+ cart.splice(index,1);
+ renderCart();
+}
+function fakePayment(){
+
+ if(cart.length === 0){
+   alert("Cart is empty ❌");
+   return;
+ }
+
+ alert("Payment Successful ✅");
+
+ showBill();
+
+ alert("🧾 Your Bill is Generated Below ⬇️"); // 👈 NEW
+
+ placeOrder();
+}
+
+function showBill(){
+
+ let bill = document.getElementById("billBox");
+
+ let total = 0;
+
+ let itemsHTML = "";
+
+ cart.forEach(item=>{
+   itemsHTML += `
+     <tr>
+       <td>${item.name} ${item.size ? "(" + item.size + ")" : ""}</td>
+       <td>₹${item.price}</td>
+     </tr>
+   `;
+   total += item.price;
+ });
+
+ let html = `
+ <div id="invoiceContent" style="padding:20px;">
+   <h2 style="text-align:center;">🧾 Invoice</h2>
+
+   <table style="width:100%;border-collapse:collapse;">
+     <tr style="border-bottom:1px solid #ccc;">
+       <th style="text-align:left;">Item</th>
+       <th style="text-align:right;">Price</th>
+     </tr>
+
+     ${itemsHTML}
+
+   </table>
+
+   <hr>
+
+   <h3 style="text-align:right;">Total: ₹${total}</h3>
+
+   <div style="text-align:center;margin-top:15px;">
+     <button onclick="downloadBill()">Download PDF</button>
+     <button onclick="printBill()">Print</button>
+   </div>
+ </div>
+ `;
+
+ bill.innerHTML = html;
+ bill.style.display = "block";
+ bill.scrollIntoView({behavior:"smooth"});
+}
+
+let toast = document.getElementById("toast");
+toast.innerText = "🧾 Bill Generated Successfully!";
+toast.style.display = "block";
+
+setTimeout(()=>{
+ toast.style.display = "none";
+},2000);
+
+
+ 
+
+function downloadBill(){
+
+ let element = document.getElementById("invoiceContent");
+
+ let opt = {
+   margin: 10,
+   filename: 'GlowLuxe_Invoice.pdf',
+   html2canvas: { scale: 2 },
+   jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+ };
+
+ html2pdf().from(element).set(opt).save();
+}
+
+
+let faqs = [
+ {q:"How to order?", a:"Add product to cart → Go to cart → Click checkout."},
+ {q:"Payment methods?", a:"UPI, Debit Card, Credit Card available."},
+ {q:"Delivery time?", a:"Delivery takes 3–5 working days."},
+ {q:"Is product original?", a:"Yes, all products are 100% original."},
+ {q:"Customer support?", a:"24/7 support available via email & WhatsApp."}
+];
+
+let faqBox = document.getElementById('faqContainer');
+
+faqs.forEach(item=>{
+ faqBox.innerHTML += `
+ <div class="faq-item">
+   <div class="faq-q" onclick="toggleFaq(this)">
+     ${item.q}
+   </div>
+   <div class="faq-a">
+     ${item.a}
+   </div>
+ </div>`;
+});
+
+function toggleFaq(el){
+ el.parentElement.classList.toggle("active");
+}
+
+function toggleFaq(el){
+ let ans = el.nextElementSibling;
+ let icon = el.querySelector("span");
+
+ if(ans.style.display === 'block'){
+   ans.style.display = 'none';
+   icon.innerText = '+';
+ } else {
+   ans.style.display = 'block';
+   icon.innerText = '-';
+ }
+}
+let slider=document.getElementById('topSlider');
+let bottom=document.getElementById('bottomSlider');
+products.forEach(p=>{
+ slider.innerHTML+=`<img src="${p.img}">`;
+ bottom.innerHTML+=`<img src="${p.img}">`;
+});
+
+const stripe=Stripe('YOUR_PUBLIC_KEY');
+function checkout(){
+ fetch('/create-checkout-session',{method:'POST'})
+ .then(res=>res.json())
+ .then(data=>stripe.redirectToCheckout({sessionId:data.id}));
+}
+
+function buyNow(name, price, btn){
+
+ let parent = btn.parentElement;
+ let selected = parent.querySelector(".sizes .active");
+
+ if(parent.querySelector(".sizes") && !selected){
+   alert("Please select size first ❗");
+   return;
+ }
+
+ let size = selected ? selected.innerText : "";
+
+ cart.push({name, price, size});
+ renderCart();
+
+ alert(name + (size ? " ("+size+")" : "") + " added to cart");
+}
+
+function printBill(){
+
+ let content = document.getElementById("invoiceContent").innerHTML;
+
+ let win = window.open('', '', 'width=800,height=600');
+
+ win.document.write(`
+   <html>
+   <head>
+     <title>Invoice</title>
+   </head>
+   <body>
+     ${content}
+   </body>
+   </html>
+ `);
+
+ win.document.close();
+ win.print();
+}
+function searchProducts(){
+
+ let input = document.getElementById("searchInput").value.toLowerCase();
+
+ if(input === ""){
+   location.reload(); // simple reset
+   return;
+ }
+
+ let filtered = offerProducts.filter(item =>
+   item.name.toLowerCase().includes(input)
+ );
+
+ renderSearchResults(filtered);
+}
+
+
+renderProducts();
+renderOffers();
+
+
+
+</script>
+
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glow Luxe Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:#fff;color:#333;overflow-x:hidden}
+
+/* MOVING BACKGROUND */
+body::before{content:"";position:fixed;width:300%;height:300%;background:url('https://picsum.photos/200?random=1');opacity:0.07;animation:moveBg 6s linear infinite;z-index:-1}
+@keyframes moveBg{0%{transform:translate(0,0)}100%{transform:translate(-500px,-500px)}}
+
+header{background:#fff;padding:15px 60px;display:flex;justify-content:space-between;border-bottom:1px solid #eee}
+header h2{color:#ff6a00}
+nav a{margin:0 10px;text-decoration:none;color:#333;font-weight:600}
+nav a:hover{color:#ff6a00}
+
+.section{padding:80px 90px;text-align:center}
+h2{color:#ff6a00;margin-bottom:35px;font-size:32px}
+
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:30px}
+.card{background:#fff;border:1px solid #eee;border-radius:15px;padding:18px;transition:.3s}
+.card:hover{transform:translateY(-5px);box-shadow:0 10px 20px rgba(0,0,0,0.1)}
+.card img{width:100%;height:180px;border-radius:10px}
+button{background:#ff6a00;color:#fff;padding:10px;border:none;border-radius:6px;margin-top:8px;cursor:pointer}
+
+/* PREMIUM SIDE SLIDER */
+.horizontal-slider{overflow:hidden;position:relative;padding:20px 0}
+.slider-track-x{display:flex;gap:30px;animation:scrollX 10s linear infinite}
+.slider-card{
+min-width:260px;
+background:linear-gradient(145deg,#ffffff,#fff3e6);
+border-radius:18px;
+padding:25px;
+box-shadow:0 10px 25px rgba(0,0,0,0.12);
+text-align:center;
+transition:.4s
+}
+.slider-card:hover{
+transform:scale(1.08);
+box-shadow:0 15px 35px rgba(0,0,0,0.2)
+}
+@keyframes scrollX{0%{transform:translateX(0)}100%{transform:translateX(-60%)}}
+
+/* SERVICES DESIGN */
+.service-icon{
+font-size:40px;
+margin-bottom:12px;
+background:#fff;
+border-radius:50%;
+padding:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+color:#ff6a00
+}
+
+/* TESTIMONIAL DESIGN */
+.test-card{
+font-style:italic;
+font-size:15px;
+line-height:1.6;
+position:relative
+}
+.test-card::before{
+content:"“";
+font-size:40px;
+color:#ff6a00;
+position:absolute;
+top:-10px;left:10px
+}
+
+footer{background:#222;color:#fff;text-align:center;padding:25px;margin-top:50px}
+</style>
+</head>
+<body>
+
+
+
+<!-- SERVICES SLIDER -->
+<section id="services" class="section">
+<h2>Our Premium Services</h2>
+<div class="horizontal-slider">
+<div class="slider-track-x">
+<div class="slider-card"><div class="service-icon">🚚</div><h3>Fast Delivery</h3><p>Quick & reliable shipping</p></div>
+<div class="slider-card"><div class="service-icon">💳</div><h3>Secure Payment</h3><p>100% safe transactions</p></div>
+<div class="slider-card"><div class="service-icon">🎁</div><h3>Free Gifts</h3><p>Exclusive offers on orders</p></div>
+<div class="slider-card"><div class="service-icon">📞</div><h3>24/7 Support</h3><p>Always here to help</p></div>
+<div class="slider-card"><div class="service-icon">⭐</div><h3>Premium Quality</h3><p>Top-rated products</p></div>
+</div>
+</div>
+</section>
+
+<!-- TESTIMONIAL SLIDER -->
+<section id="testimonials" class="section">
+<h2>What Our Customers Say</h2>
+<div class="horizontal-slider">
+<div class="slider-track-x">
+<div class="slider-card test-card">Amazing quality and stylish products! ⭐⭐⭐⭐⭐</div>
+<div class="slider-card test-card">Loved the packaging and delivery speed ⭐⭐⭐⭐</div>
+<div class="slider-card test-card">Best shopping experience ever ⭐⭐⭐⭐⭐</div>
+<div class="slider-card test-card">Affordable and premium look ⭐⭐⭐⭐</div>
+<div class="slider-card test-card">Highly recommended brand ⭐⭐⭐⭐⭐</div>
+</div>
+</div>
+</section>
+
+<!-- CONTACT SECTION -->
+
+
+<!-- CONTACT SECTION UPGRADED -->
+<section id="contact" class="section">
+<h2>Contact Us</h2>
+<div class="contact-wrapper">
+<div class="contact-info">
+<h3>Get in Touch</h3>
+<p>📍 Kanpur, India</p>
+<p>📞 +91 9876543210</p>
+<p>📧 support@glowluxe.com</p>
+<p>We are here to help you 24/7. Feel free to contact us anytime.</p>
+</div>
+
+<div class="contact-box">
+<h3>Send Message</h3>
+<form id="contactForm">
+  <input id="name" placeholder="Full Name" required>
+  <input id="email" type="email" placeholder="Email Address" required>
+  <textarea id="message" placeholder="Your Message" required></textarea>
+  <button type="submit">Submit</button>
+</form>
+</div>
+</div>
+
+<!-- GIFT SECTION -->
+<div class="gift-section">
+<h2>Special Gifts For You 🎁</h2>
+<div class="gift-box">
+<div>Free Gift on Orders above ₹999</div>
+<div>Buy 2 Get 1 Free Offer</div>
+<div>Exclusive Member Discounts</div>
+<div>Order upto ₹2999 and Win Iphone Just By Showing Your Order Bill</div>
+</div>
+</div>
+
+</section>
+
+<footer>
+<p>© 2026 Zudio Glow Luxe</p>
+</footer>
+
+<script>
+
+ 
+
+function renderProducts(){
+ let c=document.getElementById('productContainer');
+ c.innerHTML = "";   // IMPORTANT
+
+ products.forEach((p,i)=>{
+  c.innerHTML += `
+  <div class="card">
+    <img src="${p.img}">
+    <h3>${p.name}</h3>
+    <p>₹${p.price}</p>
+    <button onclick="addToCart(${i})">Add to Cart</button>
+  </div>`;
+ });
+}
+
+window.onload = function(){
+
+  // EmailJS init
+  (function(){
+  emailjs.init("0zodAlGPrx99jm1s6");
+})();
+
+  // Form submit
+  document.getElementById("contactForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    emailjs.send("service_hyygfg8","template_0zpzkqq",{
+      from_name: document.getElementById("name").value,
+      from_email: document.getElementById("email").value,
+      message: document.getElementById("message").value
+    }).then(function(){
+      alert("Message sent successfully ✅");
+    }).catch(function(error){
+      alert("Error: " + JSON.stringify(error));
+    });
+
+  });
+
+};
+
+renderProducts();
+</script>
+
+</body>
+</html>
+

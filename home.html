@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glow Luxe Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:#fff;color:#333;overflow-x:hidden}
+
+/* FAST MOVING BACKGROUND */
+body::before{
+content:"";
+position:fixed;
+width:300%;height:300%;
+background:url('https://picsum.photos/200?random=1');
+opacity:0.06;
+animation:moveBg 8s linear infinite;
+z-index:-1
+}
+@keyframes moveBg{
+0%{transform:translate(0,0)}
+100%{transform:translate(-400px,-400px)}
+}
+
+header{background:#fff;padding:15px 60px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee}
+header h2{color:#ff6a00}
+nav a{margin:0 10px;text-decoration:none;color:#333;font-weight:600}
+nav a:hover{color:#ff6a00}
+
+/* SLIDER */
+.slider{overflow:hidden;white-space:nowrap;background:#fff;padding:10px 0;border-bottom:1px solid #eee}
+.slider-track{display:inline-block;animation:slide 20s linear infinite}
+.slider img{width:150px;margin:0 15px;border-radius:10px}
+@keyframes slide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+.hero{text-align:center;padding:100px}
+.hero h1{color:#ff6a00}
+
+.section{padding:70px 80px;text-align:center}
+h2{color:#ff6a00;margin-bottom:30px;font-size:30px}
+
+.products,.offers,.services,.testimonials{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:30px}
+
+.card,.offer-card,.service-card,.test-card{
+background:#fff;border:1px solid #eee;border-radius:12px;padding:18px;transition:.3s
+}
+.card:hover,.offer-card:hover{box-shadow:0 6px 15px rgba(0,0,0,0.12)}
+
+.card img,.offer-card img{width:100%;height:180px;border-radius:10px}
+
+button{background:#ff6a00;color:#fff;padding:10px;border:none;border-radius:6px;margin-top:8px;cursor:pointer}
+
+.cart{background:#fff;border:1px solid #eee;padding:35px;margin:40px;border-radius:12px}
+
+/* CONTACT PROFESSIONAL */
+.contact-wrapper{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:50px;
+max-width:1100px;
+margin:50px auto 20px;
+}
+
+.contact-info{
+background:linear-gradient(135deg,#ff6a00,#ff8c42);
+color:#fff;
+padding:50px;
+border-radius:20px;
+text-align:left;
+line-height:1.8;
+}
+
+.contact-box{
+background:#fff;
+padding:50px;
+border-radius:20px;
+border:1px solid #eee;
+box-shadow:0 10px 25px rgba(0,0,0,0.08)
+}
+
+.contact-box input,.contact-box textarea{
+width:100%;padding:14px;margin:10px 0;border:1px solid #ddd;border-radius:8px
+}
+
+.contact-box button{
+width:100%;font-weight:600;
+background:linear-gradient(45deg,#ff6a00,#ff8c42)
+}
+
+/* GIFT SECTION */
+.gift-section{
+background:linear-gradient(120deg,#fff3e6,#ffe0cc);
+padding:40px;
+border-radius:15px;
+max-width:1000px;
+margin:30px auto;
+box-shadow:0 5px 20px rgba(0,0,0,0.1)
+}
+.gift-box{
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:20px
+}
+.gift-box div{
+flex:1;
+min-width:200px;
+background:#fff;
+padding:20px;
+border-radius:10px;
+border:1px solid #eee
+}
+
+/* FAQ */
+.faq-item{border:1px solid #ddd;margin:10px 0;border-radius:8px}
+.faq-q{background:#ff6a00;color:#fff;padding:12px;cursor:pointer}
+.faq-a{display:none;padding:12px}
+
+footer{background:#222;color:#fff;text-align:center;padding:20px;margin-top:40px}
+</style>
+</head>
+<body>
+
+<header>
+<h2>Glow Luxe</h2>
+<nav>
+<a href="#">Home</a>
+<a href="#products">Products</a>
+<a href="#offers">Offers</a>
+<a href="#services">Services</a>
+<a href="#faq">FAQ</a>
+<a href="#contact">Contact</a>
+</nav>
+</header>
+
+<div class="slider"><div class="slider-track" id="topSlider"></div></div>
+
+<section class="hero">
+<h1>Premium Accessories Store</h1>
+<p>Luxury Collection</p>
+</section>
+
+<section id="products" class="section">
+<h2>Products</h2>
+<div class="products" id="productContainer"></div>
+</section>
+
+<section id="offers" class="section">
+<h2>Offers</h2>
+<div class="offers" id="offerContainer"></div>
+</section>
+
+<section class="cart">
+<h2>Cart</h2>
+<ul id="cart"></ul>
+<h3>Total ₹<span id="total">0</span></h3>
+<button onclick="checkout()">Pay Now</button>
+</section>
+
+
+
+<section id="faq" class="section">
+<h2>FAQ</h2>
+<div id="faqContainer"></div>
+</section>
+
+<div class="slider"><div class="slider-track" id="bottomSlider"></div></div>
+
+
+
+
+<script>
+
+
+
+let products=[];
+for(let i=1;i<=50;i++){
+ products.push({name:"Product "+i,price:Math.floor(Math.random()*1000)+200,img:"https://picsum.photos/200?random="+i});
+}
+
+let offers=[];
+for(let i=1;i<=25;i++){
+ offers.push({img:"https://picsum.photos/200?offer="+i,price:Math.floor(Math.random()*1000)+100});
+}
+
+let cart=[];
+
+function renderProducts(){
+ let c=document.getElementById('productContainer');
+ products.forEach((p,i)=>{
+  c.innerHTML+=`<div class="card"><img src="${p.img}"><h3>${p.name}</h3><p>₹${p.price}</p><button onclick="addToCart(${i})">Add</button></div>`;
+ });
+}
+
+function renderOffers(){
+ let o=document.getElementById('offerContainer');
+ offers.forEach((of,i)=>{
+  o.innerHTML+=`<div class="offer-card"><img src="${of.img}"><p>₹${of.price}</p><button onclick="addToCart(${i})">Add</button><button>🎁 Gift</button></div>`;
+ });
+}
+
+function addToCart(i){cart.push(products[i]||offers[i]);renderCart();}
+
+function renderCart(){
+ let list=document.getElementById('cart');let total=0;list.innerHTML='';
+ cart.forEach(item=>{total+=item.price;list.innerHTML+=`<li>${item.name||"Offer"} ₹${item.price}</li>`});
+ document.getElementById('total').innerText=total;
+}
+
+let faqs=["How to order?","Payment methods?","Delivery time?","Return policy?","Is product original?","Customer support?"];
+let faqBox=document.getElementById('faqContainer');
+faqs.forEach(q=>{
+ faqBox.innerHTML+=`<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">${q}</div><div class="faq-a">Answer for ${q}</div></div>`;
+});
+
+function toggleFaq(el){
+ let ans=el.nextElementSibling;
+ ans.style.display=ans.style.display==='block'?'none':'block';
+}
+
+let slider=document.getElementById('topSlider');
+let bottom=document.getElementById('bottomSlider');
+products.forEach(p=>{
+ slider.innerHTML+=`<img src="${p.img}">`;
+ bottom.innerHTML+=`<img src="${p.img}">`;
+});
+
+const stripe=Stripe('YOUR_PUBLIC_KEY');
+function checkout(){
+ fetch('/create-checkout-session',{method:'POST'})
+ .then(res=>res.json())
+ .then(data=>stripe.redirectToCheckout({sessionId:data.id}));
+}
+
+renderProducts();
+renderOffers();
+</script>
+
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glow Luxe Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:#fff;color:#333;overflow-x:hidden}
+
+/* MOVING BACKGROUND */
+body::before{content:"";position:fixed;width:300%;height:300%;background:url('https://picsum.photos/200?random=1');opacity:0.07;animation:moveBg 6s linear infinite;z-index:-1}
+@keyframes moveBg{0%{transform:translate(0,0)}100%{transform:translate(-500px,-500px)}}
+
+header{background:#fff;padding:15px 60px;display:flex;justify-content:space-between;border-bottom:1px solid #eee}
+header h2{color:#ff6a00}
+nav a{margin:0 10px;text-decoration:none;color:#333;font-weight:600}
+nav a:hover{color:#ff6a00}
+
+.section{padding:80px 90px;text-align:center}
+h2{color:#ff6a00;margin-bottom:35px;font-size:32px}
+
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:30px}
+.card{background:#fff;border:1px solid #eee;border-radius:15px;padding:18px;transition:.3s}
+.card:hover{transform:translateY(-5px);box-shadow:0 10px 20px rgba(0,0,0,0.1)}
+.card img{width:100%;height:180px;border-radius:10px}
+button{background:#ff6a00;color:#fff;padding:10px;border:none;border-radius:6px;margin-top:8px;cursor:pointer}
+
+/* PREMIUM SIDE SLIDER */
+.horizontal-slider{overflow:hidden;position:relative;padding:20px 0}
+.slider-track-x{display:flex;gap:30px;animation:scrollX 10s linear infinite}
+.slider-card{
+min-width:260px;
+background:linear-gradient(145deg,#ffffff,#fff3e6);
+border-radius:18px;
+padding:25px;
+box-shadow:0 10px 25px rgba(0,0,0,0.12);
+text-align:center;
+transition:.4s
+}
+.slider-card:hover{
+transform:scale(1.08);
+box-shadow:0 15px 35px rgba(0,0,0,0.2)
+}
+@keyframes scrollX{0%{transform:translateX(0)}100%{transform:translateX(-60%)}}
+
+/* SERVICES DESIGN */
+.service-icon{
+font-size:40px;
+margin-bottom:12px;
+background:#fff;
+border-radius:50%;
+padding:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+color:#ff6a00
+}
+
+/* TESTIMONIAL DESIGN */
+.test-card{
+font-style:italic;
+font-size:15px;
+line-height:1.6;
+position:relative
+}
+.test-card::before{
+content:"“";
+font-size:40px;
+color:#ff6a00;
+position:absolute;
+top:-10px;left:10px
+}
+
+footer{background:#222;color:#fff;text-align:center;padding:25px;margin-top:50px}
+</style>
+</head>
+<body>
+
+
+
+<!-- SERVICES SLIDER -->
+<section id="services" class="section">
+<h2>Our Premium Services</h2>
+<div class="horizontal-slider">
+<div class="slider-track-x">
+<div class="slider-card"><div class="service-icon">🚚</div><h3>Fast Delivery</h3><p>Quick & reliable shipping</p></div>
+<div class="slider-card"><div class="service-icon">💳</div><h3>Secure Payment</h3><p>100% safe transactions</p></div>
+<div class="slider-card"><div class="service-icon">🎁</div><h3>Free Gifts</h3><p>Exclusive offers on orders</p></div>
+<div class="slider-card"><div class="service-icon">📞</div><h3>24/7 Support</h3><p>Always here to help</p></div>
+<div class="slider-card"><div class="service-icon">⭐</div><h3>Premium Quality</h3><p>Top-rated products</p></div>
+</div>
+</div>
+</section>
+
+<!-- TESTIMONIAL SLIDER -->
+<section id="testimonials" class="section">
+<h2>What Our Customers Say</h2>
+<div class="horizontal-slider">
+<div class="slider-track-x">
+<div class="slider-card test-card">Amazing quality and stylish products! ⭐⭐⭐⭐⭐</div>
+<div class="slider-card test-card">Loved the packaging and delivery speed ⭐⭐⭐⭐</div>
+<div class="slider-card test-card">Best shopping experience ever ⭐⭐⭐⭐⭐</div>
+<div class="slider-card test-card">Affordable and premium look ⭐⭐⭐⭐</div>
+<div class="slider-card test-card">Highly recommended brand ⭐⭐⭐⭐⭐</div>
+</div>
+</div>
+</section>
+
+<!-- CONTACT SECTION UPGRADED -->
+<section id="contact" class="section">
+<h2>Contact Us</h2>
+<div class="contact-wrapper">
+<div class="contact-info">
+<h3>Get in Touch</h3>
+<p>📍 Kanpur, India</p>
+<p>📞 +91 9876543210</p>
+<p>📧 support@glowluxe.com</p>
+<p>We are here to help you 24/7. Feel free to contact us anytime.</p>
+</div>
+
+<div class="contact-box">
+<h3>Send Message</h3>
+<input placeholder="Full Name">
+<input placeholder="Email Address">
+<textarea placeholder="Your Message"></textarea>
+<button>Submit</button>
+</div>
+</div>
+
+<!-- GIFT SECTION -->
+<div class="gift-section">
+<h2>Special Gifts For You 🎁</h2>
+<div class="gift-box">
+<div>Free Gift on Orders above ₹999</div>
+<div>Buy 2 Get 1 Free Offer</div>
+<div>Exclusive Member Discounts</div>
+</div>
+</div>
+
+</section>
+
+<footer>
+<p>© 2026 Glow Luxe</p>
+</footer>
+
+<script>
+let products=[];
+for(let i=1;i<=20;i++){
+ products.push({name:"Product "+i,price:Math.floor(Math.random()*1000)+200,img:"https://picsum.photos/200?random="+i});
+}
+
+function renderProducts(){
+ let c=document.getElementById('productContainer');
+ products.forEach((p)=>{
+  c.innerHTML+=`<div class="card"><img src="${p.img}"><h3>${p.name}</h3><p>₹${p.price}</p><button>Add to Cart</button></div>`;
+ });
+}
+
+renderProducts();
+</script>
+
+</body>
+</html>
+
